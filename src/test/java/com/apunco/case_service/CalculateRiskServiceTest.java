@@ -15,12 +15,13 @@ class CalculateRiskServiceTest {
     private static final String NOT_SO_IMPORTANT_CASE = "NOT_SO_IMPORTANT_CASE";
     private static final String IMPORTANT_CASE = "IMPORTANT_CASE";
     private static final String VERY_IMPORTANT_CASE = "VERY_IMPORTANT_CASE";
+    private static final String INVALID_CASE = "INVALID_CASE";
 
     @Autowired
     CalculateRiskService calculateRiskService;
 
     @Test
-    void testWithNullType() {
+    void testWithNull() {
         String caseType = null;
 
         InvalidCaseTypeException exception = assertThrows(InvalidCaseTypeException.class, () -> {
@@ -29,6 +30,16 @@ class CalculateRiskServiceTest {
         assertEquals("Case type cannot be null", exception.getMessage());
     }
 
+    @Test
+    void testIncorrectMapping() {
+        String caseType = INVALID_CASE;
+
+        InvalidCaseTypeException exception = assertThrows(InvalidCaseTypeException.class, () -> {
+            calculateRiskService.calculateRisk(caseType);
+        });
+
+        assertEquals("Invalid case type provided: " + caseType, exception.getMessage());
+    }
     @Test
     void testCorrectMapping() {
         String caseType;
